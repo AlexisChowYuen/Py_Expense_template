@@ -1,5 +1,5 @@
 from examples import custom_style_2
-from expense import expense_questions,new_expense
+from expense import expense_questions,new_expense,get_list_users
 from user import user_questions,add_user
 from PyInquirer import prompt
 
