@@ -45,12 +45,14 @@ def new_expense(*args):
     new_amount = int(amount) / len(spender)
     res = True
     for i in range(len(spender)):
-        res = res and register_expense(new_amount, infos['label'], spender[i])
+        # Create list without item at index i
+        others_involved = spender[:i] + spender[i+1:]
+        res = res and register_expense(new_amount, infos['label'], spender[i], others_involved)
     return res
 
 # register expense in csv file
-def register_expense(amount, label, spender):
+def register_expense(amount, label, spender, others_involved=[]):
     with open('expense.csv', 'a') as f:
         spamwriter = csv.writer(f, delimiter=' ')
-        spamwriter.writerow([amount, label, spender])
+        spamwriter.writerow([amount, label, spender, others_involved])
     return True
