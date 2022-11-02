@@ -35,4 +35,3 @@ def register_expense(amount, label, spender):
         spamwriter.writerow([amount, label, spender])
     return True
 
-
