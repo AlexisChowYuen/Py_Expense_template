@@ -6,7 +6,7 @@ def get_list_users():
         reader = csv.reader(f)
         list_users = list(reader)
         for i in range(len(list_users)):
-            list_users[i] = list_users[i][0]
+            list_users[i] = { "name": list_users[i][0] }
     return list_users
 
 expense_questions = [
@@ -21,10 +21,13 @@ expense_questions = [
         "message":"New Expense - Label: ",
     },
     {
-        "type":"rawlist",
+        "type":"checkbox",
+        'qmark': '😃',
         "name":"spender",
         "message":"New Expense - Spender: ",
-        "choices": get_list_users()
+        "choices": get_list_users(),
+        'validate': lambda answer: 'You must choose at least one user.' \
+            if len(answer) == 0 else True
     }
 ]
 
@@ -35,7 +38,15 @@ def new_expense(*args):
     infos = prompt(expense_questions)
     # Writing the informations on external file might be a good idea ¯\_(ツ)_/¯
     print("Expense Added !")
-    return register_expense(infos['amount'], infos['label'], infos['spender'])
+    
+    amount = infos['amount']
+    spender = infos['spender']
+
+    new_amount = int(amount) / len(spender)
+    res = True
+    for i in range(len(spender)):
+        res = res and register_expense(new_amount, infos['label'], spender[i])
+    return res
 
 # register expense in csv file
 def register_expense(amount, label, spender):
